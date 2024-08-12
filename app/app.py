@@ -8,7 +8,8 @@ load_dotenv()
 app = FastAPI()
 
 origins = [
-    "http://localhost:3000"  # Replace with your actual frontend domain
+    "http://localhost:3000",
+    "https://radiant-tiramisu-db92c5.netlify.app"# Replace with your actual frontend domain
 ]
 
 app.add_middleware(
