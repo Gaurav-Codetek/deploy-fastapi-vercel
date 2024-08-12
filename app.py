@@ -39,6 +39,6 @@ def hello_world():
 
 if __name__ == '__main__':
     import uvicorn
-    uvicorn.run(app)
+    app.run()
 # To run the application, use the command below:
 # uvicorn {file name}:app --reload
