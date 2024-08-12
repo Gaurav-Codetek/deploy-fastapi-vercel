@@ -32,6 +32,13 @@ async def add_data(request: dataReq):
     print("Data added")
 
     return {"title": title, "content": content}
+@app.get('/')
+def hello_world():
+    return "Hello,World"
 
+
+if __name__ == '__main__':
+    import uvicorn
+    uvicorn.run(app)
 # To run the application, use the command below:
 # uvicorn {file name}:app --reload
