@@ -1,7 +1,5 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
-from promptai import generate
-from promptai import configure
 from pymongo import MongoClient
 from dotenv import load_dotenv
 import os
@@ -36,9 +34,5 @@ async def add_data(request: dataReq):
 def hello_world():
     return "Hello,World"
 
-
-if __name__ == '__main__':
-    import uvicorn
-    app.run()
 # To run the application, use the command below:
 # uvicorn {file name}:app --reload
