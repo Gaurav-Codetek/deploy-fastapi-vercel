@@ -3,13 +3,13 @@ from pydantic import BaseModel
 from pymongo import MongoClient
 from dotenv import load_dotenv
 from fastapi.middleware.cors import CORSMiddleware
-from promptai import configure, generate
 import os
 load_dotenv()
 app = FastAPI()
 
 origins = [
-    "http://localhost:3000"# Replace with your actual frontend domain
+    "http://localhost:3000",
+    "https://radiant-tiramisu-db92c5.netlify.app"# Replace with your actual frontend domain
 ]
 
 app.add_middleware(
@@ -32,30 +32,17 @@ col = 'Tempo'
 client = MongoClient(uri)
 database = client[db]
 collection = database[col]
-API_KEY = os.getenv('API_KEY')
-column = ['id', 'title', 'text']
-df = configure(uri, db, col, API_KEY, column, True)
+
 print("Server ran once")
+@app.post("/addData")
+async def add_data(request: dataReq):
+    title = request.title
+    content = request.content
 
-@app.post("/api")
-async def generate_response(request: PromptRequest):
-    # Extract the prompt from the request body
-    user_prompt = request.prompt
+    collection.insert_one({"title": title, "content": content})
+    print("Data added")
 
-    # calling generate() function with prompt as parameter
-    response = generate(user_prompt, df)
-
-    return {"response": response}
-
-# @app.post("/addData")
-# async def add_data(request: dataReq):
-#     title = request.title
-#     content = request.content
-#
-#     collection.insert_one({"title": title, "content": content})
-#     print("Data added")
-#
-#     return {"title": title, "content": content}
+    return {"title": title, "content": content}
 @app.get('/')
 def hello_world():
     return "Hello,World"
