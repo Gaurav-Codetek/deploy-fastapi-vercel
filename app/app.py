@@ -3,6 +3,7 @@ from pydantic import BaseModel
 from pymongo import MongoClient
 from dotenv import load_dotenv
 from fastapi.middleware.cors import CORSMiddleware
+from promptai import configure, generate
 import os
 load_dotenv()
 app = FastAPI()
@@ -32,8 +33,22 @@ col = 'Tempo'
 client = MongoClient(uri)
 database = client[db]
 collection = database[col]
-
+API_KEY = os.getenv('API_KEY')
+column = ['id', 'title', 'text']
+df = configure(uri, db, col, API_KEY, column, True)
 print("Server ran once")
+
+@app.post("/api")
+async def generate_response(request: PromptRequest):
+    # Extract the prompt from the request body
+    user_prompt = request.prompt
+
+    # calling generate() function with prompt as parameter
+
+    response = generate(user_prompt, df)
+
+    return {"respons": response}
+
 @app.post("/addData")
 async def add_data(request: dataReq):
     title = request.title
