@@ -1,8 +1,8 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
-from pymongo import MongoClient
 from dotenv import load_dotenv
 from fastapi.middleware.cors import CORSMiddleware
+from promptai import configure, generate
 import os
 load_dotenv()
 app = FastAPI()
@@ -29,20 +29,34 @@ class dataReq(BaseModel):
 uri = os.getenv('URI')
 db = 'knowledge_base'
 col = 'Tempo'
-client = MongoClient(uri)
-database = client[db]
-collection = database[col]
+API_KEY = os.getenv('API_KEY')
+column = ['id', 'title', 'text']
+df = configure(uri, db, col, API_KEY, column, True)
+# client = MongoClient(uri)
+# database = client[db]
+# collection = database[col]
 
 print("Server ran once")
-@app.post("/addData")
-async def add_data(request: dataReq):
-    title = request.title
-    content = request.content
 
-    collection.insert_one({"title": title, "content": content})
-    print("Data added")
+@app.post("/api")
+async def generate_response(request: PromptRequest):
+    # Extract the prompt from the request body
+    user_prompt = request.prompt
 
-    return {"title": title, "content": content}
+    # calling generate() function with prompt as parameter
+
+    response = generate(user_prompt, df)
+
+    return {"respons": response}
+# @app.post("/addData")
+# async def add_data(request: dataReq):
+#     title = request.title
+#     content = request.content
+#
+#     collection.insert_one({"title": title, "content": content})
+#     print("Data added")
+#
+#     return {"title": title, "content": content}
 @app.get('/')
 def hello_world():
     return "Hello,World"
