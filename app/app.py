@@ -44,10 +44,9 @@ async def generate_response(request: PromptRequest):
     user_prompt = request.prompt
 
     # calling generate() function with prompt as parameter
-
     response = generate(user_prompt, df)
 
-    return {"respons": response}
+    return {"response": response}
 
 @app.post("/addData")
 async def add_data(request: dataReq):
