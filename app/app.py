@@ -9,8 +9,7 @@ load_dotenv()
 app = FastAPI()
 
 origins = [
-    "http://localhost:3000",
-    "https://radiant-tiramisu-db92c5.netlify.app"# Replace with your actual frontend domain
+    "http://localhost:3000"# Replace with your actual frontend domain
 ]
 
 app.add_middleware(
@@ -48,15 +47,15 @@ async def generate_response(request: PromptRequest):
 
     return {"response": response}
 
-@app.post("/addData")
-async def add_data(request: dataReq):
-    title = request.title
-    content = request.content
-
-    collection.insert_one({"title": title, "content": content})
-    print("Data added")
-
-    return {"title": title, "content": content}
+# @app.post("/addData")
+# async def add_data(request: dataReq):
+#     title = request.title
+#     content = request.content
+#
+#     collection.insert_one({"title": title, "content": content})
+#     print("Data added")
+#
+#     return {"title": title, "content": content}
 @app.get('/')
 def hello_world():
     return "Hello,World"
